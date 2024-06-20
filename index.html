@@ -10,28 +10,25 @@
     <div class="container">
         <h1>Transportation Problem Solver</h1>
         <div id="input-section">
-            <label for="rows">Enter number of rows:</label>
-            <input type="number" id="rows" name="rows"><br><br>
-            <label for="columns">Enter number of columns:</label>
-            <input type="number" id="columns" name="columns"><br><br>
-            <button onclick="submitDimensions()">Submit</button>
+            <label for="rows">Number of Rows (Supply):</label>
+            <input type="number" id="rows" min="1">
+            <label for="cols">Number of Columns (Demand):</label>
+            <input type="number" id="cols" min="1">
+            <button onclick="generateTable()">Submit</button>
         </div>
-        <div id="table-section" style="display:none;">
-            <div id="cost-matrix"></div>
-            <div id="supply-section"></div>
-            <div id="demand-section"></div>
+        <div id="table-section"></div>
+        <div id="method-section" style="display:none;">
             <label for="method">Select Method:</label>
             <select id="method">
-                <option value="northwest">NorthWest Method</option>
-                <option value="leastcost">Least Cost Method</option>
-                <option value="vogel">Vogel's Approximation Method</option>
-            </select><br><br>
+                <option value="northWestCorner">NorthWest Corner Method</option>
+                <option value="leastCost">Least Cost Method</option>
+                <option value="vogels">Vogel's Approximation Method</option>
+                <!-- Add more methods here -->
+            </select>
             <button onclick="solve()">Solve</button>
+            <button id="reset-button" style="display:none;" onclick="reset()">Reset</button>
         </div>
-        <div id="result-section" style="display:none;">
-            <h2>Result</h2>
-            <p id="result"></p>
-        </div>
+        <div id="result-section"></div>
     </div>
     <script src="script.js"></script>
 </body>
