@@ -119,7 +119,109 @@ function leastCost(costMatrix, supply, demand) {
     return `Total Transportation Cost using Least Cost Method: ${totalCost}<br><br><h2>Steps</h2>${steps}`;
 }
 
-function vogelsApproximationMethod(costMatrix, supply, demand) {}
+function vogelsApproximationMethod(costMatrix, supply, demand) {
+    let totalCost = 0;
+    let rows = supply.length;
+    let cols = demand.length;
+    let steps = '';
+
+    while (rows > 0 && cols > 0) {
+        const penalties = [];
+
+        for (let i = 0; i < supply.length; i++) {
+            if (supply[i] > 0) {
+                let min1 = Infinity, min2 = Infinity;
+                for (let j = 0; j < demand.length; j++) {
+                    if (demand[j] > 0) {
+                        if (costMatrix[i][j] < min1) {
+                            min2 = min1;
+                            min1 = costMatrix[i][j];
+                        } else if (costMatrix[i][j] < min2) {
+                            min2 = costMatrix[i][j];
+                        }
+                    }
+                }
+                penalties.push({ index: i, type: 'row', penalty: min2 - min1 });
+            }
+        }
+
+        for (let j = 0; j < demand.length; j++) {
+            if (demand[j] > 0) {
+                let min1 = Infinity, min2 = Infinity;
+                for (let i = 0; i < supply.length; i++) {
+                    if (supply[i] > 0) {
+                        if (costMatrix[i][j] < min1) {
+                            min2 = min1;
+                            min1 = costMatrix[i][j];
+                        } else if (costMatrix[i][j] < min2) {
+                            min2 = costMatrix[i][j];
+                        }
+                    }
+                }
+                penalties.push({ index: j, type: 'column', penalty: min2 - min1 });
+            }
+        }
+
+        penalties.sort((a, b) => b.penalty - a.penalty);
+        const highestPenalty = penalties[0];
+
+        if (highestPenalty.type === 'row') {
+            const i = highestPenalty.index;
+            let minCost = Infinity;
+            let minCol = -1;
+
+            for (let j = 0; j < demand.length; j++) {
+                if (demand[j] > 0 && costMatrix[i][j] < minCost) {
+                    minCost = costMatrix[i][j];
+                    minCol = j;
+                }
+            }
+
+            const allocation = Math.min(supply[i], demand[minCol]);
+            totalCost += allocation * minCost;
+            supply[i] -= allocation;
+            demand[minCol] -= allocation;
+
+            steps += `Allocate ${allocation} units from S${i+1} to D${minCol+1} at a cost of ${minCost}. Remaining supply at S${i+1} is ${supply[i]} and remaining demand at D${minCol+1} is ${demand[minCol]}.<br><br>`;
+            steps += `Matrix at this step:<br>${printMatrix(costMatrix, supply, demand)}<br>`;
+
+            if (supply[i] === 0) {
+                rows--;
+            }
+            if (demand[minCol] === 0) {
+                cols--;
+            }
+        } else if (highestPenalty.type === 'column') {
+            const j = highestPenalty.index;
+            let minCost = Infinity;
+            let minRow = -1;
+
+            for (let i = 0; i < supply.length; i++) {
+                if (supply[i] > 0 && costMatrix[i][j] < minCost) {
+                    minCost = costMatrix[i][j];
+                    minRow = i;
+                }
+            }
+
+            const allocation = Math.min(supply[minRow], demand[j]);
+            totalCost += allocation * minCost;
+            supply[minRow] -= allocation;
+            demand[j] -= allocation;
+
+            steps += `Allocate ${allocation} units from S${minRow+1} to D${j+1} at a cost of ${minCost}. Remaining supply at S${minRow+1} is ${supply[minRow]} and remaining demand at D${j+1} is ${demand[j]}.<br><br>`;
+            steps += `Matrix at this step:<br>${printMatrix(costMatrix, supply, demand)}<br>`;
+
+            if (supply[minRow] === 0) {
+                rows--;
+            }
+            if (demand[j] === 0) {
+                cols--;
+            }
+        }
+    }
+
+    return `Total Transportation Cost using Vogel's Approximation Method: ${totalCost}<br><br><h2>Steps</h2>${steps}`;
+}
 
 
 
