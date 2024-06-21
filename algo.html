@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transportation Problem</title>
+    <link rel="stylesheet" href="styles1.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" id="calculator-tab">Calculator</a>
+        <a href="#algorithm-section" id="algorithm-tab" class="active">Algorithm</a>
+    </nav>
+    <div class="container">
+        <div id="calculator-section" class="content-section hidden">
+            <!-- Calculator content goes here -->
+            <h2>Calculator</h2>
+            <p>Calculator functionality will be implemented here.</p>
+        </div>
+        <div id="algorithm-section" class="content-section">
+            <div class="centered-content">
+                <div class="algorithm-select">
+                    <label for="algorithm-select">Select Algorithm:</label>
+                    <select id="algorithm-select">
+                        <option value="nw">NorthWest Corner Method</option>
+                        <option value="lc">Least Cost Method</option>
+                        <option value="vam">Vogel's Approximation Method</option>
+                    </select>
+                    <button id="go-button">Go</button>
+                </div>
+            </div>
+            <div class="algorithm-display">
+                <div class="algorithm-text">
+                    <h2 id="algorithm-title">NorthWest Corner Method Algorithm</h2>
+                    <p id="algorithm-description">
+                        1. Start with the cell in the top-left corner (north-west corner) of the cost matrix.<br>
+                        2. Allocate as much as possible to the selected cell and adjust the supply and demand.<br>
+                        3. Move to the next cell to the right if the current column's demand is met, or move down if the current row's supply is exhausted.<br>
+                        4. Repeat steps 2-3 until all supply and demand are met.
+                    </p>
+                </div>
+                <div class="algorithm-image">
+                    <img id="algorithm-flowchart" src="nw.png" alt="NorthWest Method Flowchart">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script1.js"></script>
+</body>
+</html>
