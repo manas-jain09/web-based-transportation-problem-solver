@@ -37,8 +37,8 @@ function generateTable() {
 
 function solve() {
     const method = document.getElementById('method').value;
-    const rows = document.getElementById('rows').value;
-    const cols = document.getElementById('cols').value;
+    const rows = parseInt(document.getElementById('rows').value);
+    const cols = parseInt(document.getElementById('cols').value);
 
     const costMatrix = [];
     const supply = [];
@@ -57,6 +57,8 @@ function solve() {
         demand.push(parseInt(document.getElementById(`demand-${j}`).value));
     }
 
+    balanceProblem(costMatrix, supply, demand);
+
     let result = '';
     if (method === 'northWestCorner') {
         result = northWestCorner(costMatrix, supply, demand);
@@ -67,6 +69,25 @@ function solve() {
     }
 
     document.getElementById('result-section').innerHTML = `<h2>Result</h2><p>${result}</p>`;
+}
+
+function balanceProblem(costMatrix, supply, demand) {
+    const totalSupply = supply.reduce((acc, val) => acc + val, 0);
+    const totalDemand = demand.reduce((acc, val) => acc + val, 0);
+
+    if (totalSupply > totalDemand) {
+        // Add dummy column
+        const dummyColumn = Array(supply.length).fill(0);
+        for (let i = 0; i < costMatrix.length; i++) {
+            costMatrix[i].push(0); // Cost for dummy column is 0
+        }
+        demand.push(totalSupply - totalDemand);
+    } else if (totalDemand > totalSupply) {
+        // Add dummy row
+        const dummyRow = Array(demand.length).fill(0);
+        costMatrix.push(dummyRow);
+        supply.push(totalDemand - totalSupply);
+    }
 }
 
 function northWestCorner(costMatrix, supply, demand) {
@@ -222,8 +243,6 @@ function vogelsApproximationMethod(costMatrix, supply, demand) {
 
     return `Total Transportation Cost using Vogel's Approximation Method: ${totalCost}<br><br><h2>Steps</h2>${steps}`;
 }
-
-
 
 function printMatrix(costMatrix, supply, demand) {
     let matrixHTML = '<table>';
